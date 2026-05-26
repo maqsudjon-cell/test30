@@ -244,9 +244,7 @@
     <div class="header-actions">
       <span class="progress-pill"><span id="progressCount">0</span>/40</span>
       <button class="btn btn-ghost" onclick="eraseHighlights()">Clear Highlights</button>
-      <button class="btn btn-ghost" onclick="resetAllAnswers()">↻ Reset</button>
-      <button class="btn btn-ghost" onclick="changeMode()">↺ Mode</button>
-      <button class="btn btn-primary" onclick="submitAnswers()">✓ Submit</button>
+
     </div>
   </div>
 </header>
@@ -436,16 +434,18 @@ function setSpeed(rate) {
   document.querySelectorAll('.speed-btn').forEach(b => b.classList.toggle('active', parseFloat(b.textContent) === rate));
 }
 function loadTrackForPart(n) { audioSrc.src = audioTracks[n]; audioNum.textContent = n; player.load(); }
+
 function switchPart(n) {
-  document.querySelectorAll('.part-tab').forEach(t => t.classList.remove('active'));
-  document.querySelector(`.part-tab[data-part="${n}"]`).classList.add('active');
-  document.querySelectorAll('.part-section').forEach(s => s.classList.remove('active'));
-  document.getElementById('part-'+n).classList.add('active');
-  if (currentMode !== 'simulation') loadTrackForPart(n);
-  const sw = document.getElementById('submitWrap');
+  document.querySelectorAll('.part-section').forEach((el,i) => {
+    el.classList.toggle('active', i+1 === n);
+  });
+  document.querySelectorAll('.part-tab').forEach((el,i) => {
+    el.classList.toggle('active', i+1 === n);
+  });
+  var sw = document.getElementById('submitWrap');
   if (sw) sw.style.display = n === 4 ? 'block' : 'none';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
 let currentMode = null, currentSimSection = 0, reviewInterval = null, simHasStarted = false;
 function selectMode(mode) {
   currentMode = mode;
@@ -754,5 +754,10 @@ function resetAllAnswers() { if (!confirm('Remove ALL your answers and start fre
 
 </script>
 <script src="https://maqsudjon-cell.github.io/ielts-hub/js/test-page-auto.js" defer></script>
+
+<div class="submit-wrap" id="submitWrap" style="display:none">
+    <button class="btn btn-primary" onclick="submitAnswers()">Submit Answers</button>
+  </div>
+
 </body>
 </html>
